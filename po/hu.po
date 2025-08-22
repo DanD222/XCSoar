@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcsoar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-17 22:14+0000\n"
+"POT-Creation-Date: 2025-08-22 18:16+0000\n"
 "PO-Revision-Date: 2023-05-14 20:52+0000\n"
 "Last-Translator: Péter Gyetvai <gyetpet@mailbox.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/xcsoar/"
@@ -2234,7 +2234,7 @@ msgstr "Tereptárgy adatbázis"
 #: src/Dialogs/Device/LX/ManageNanoDialog.cpp:60
 #: src/Dialogs/Settings/dlgConfiguration.cpp:148
 #: src/InfoBoxes/Content/Altitude.cpp:28 src/InfoBoxes/Content/MacCready.cpp:31
-#: src/InfoBoxes/Content/Places.cpp:99
+#: src/InfoBoxes/Content/Places.cpp:100
 #, no-c-format
 msgid "Setup"
 msgstr "Beállítás"
@@ -10103,7 +10103,7 @@ msgstr "Nyitva"
 msgid "Waiting"
 msgstr "Várakozik"
 
-#: src/InfoBoxes/Content/Places.cpp:98
+#: src/InfoBoxes/Content/Places.cpp:99
 #, fuzzy, no-c-format
 msgid "Reference"
 msgstr "Referencia tömeg"

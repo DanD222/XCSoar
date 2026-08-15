@@ -911,9 +911,8 @@ MainWindow::FinishStartup() noexcept
 {
   timer.Schedule(std::chrono::milliseconds(500)); // 2 times per second
 
-  /* start map refresh timer at configured rate (default 10 Hz) */
-  if (map_refresh_hz > 0)
-    map_refresh_timer.Schedule(std::chrono::milliseconds(1000 / map_refresh_hz));
+  /* apply persisted map refresh rate from UI settings (default 10 Hz) */
+  SetMapRefreshHz(CommonInterface::GetUISettings().map_refresh_hz);
 
   ResumeThreads();
 }

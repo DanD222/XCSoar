@@ -3,6 +3,7 @@
 
 #include "MapDisplayConfigPanel.hpp"
 #include "Profile/Keys.hpp"
+#include "Profile/Profile.hpp"
 #include "Form/DataField/Enum.hpp"
 #include "Form/DataField/Listener.hpp"
 #include "Interface.hpp"
@@ -86,6 +87,20 @@ MapDisplayConfigPanel::OnModified(DataField &df) noexcept
       IsDataField(OrientationCircling, df) ||
       IsDataField(MAP_SHIFT_BIAS, df)) {
     UpdateVisibilities();
+    return;
+  }
+
+  if (IsDataField(MAP_REFRESH_RATE, df)) {
+    /* apply immediately and persist */
+    UISettings &ui_settings = CommonInterface::SetUISettings();
+    const unsigned new_hz = GetValueEnum(MAP_REFRESH_RATE);
+    if (ui_settings.map_refresh_hz != new_hz) {
+      ui_settings.map_refresh_hz = new_hz;
+      if (CommonInterface::main_window)
+        CommonInterface::main_window->SetMapRefreshHz(new_hz);
+      Profile::Save();
+    }
+    return;
   }
 }
 

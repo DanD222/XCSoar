@@ -234,6 +234,9 @@ constexpr std::string_view FontAirspaceColourDlgFont = "AirspaceColourDlgFont";
 constexpr std::string_view FontTeamCodeFont = "TeamCodeFont";
 constexpr std::string_view Show95PercentRuleHelpers = "Show95PercentRuleHelpers";
 
+// Map refresh rate (Hz) saved user setting
+constexpr std::string_view MapRefreshHz = "MapRefreshHz";
+
 constexpr std::string_view UseFinalGlideDisplayMode = "UseFinalGlideDisplayMode";
 constexpr std::string_view InfoBoxGeometry = "InfoBoxGeometry";
 constexpr std::string_view InfoBoxTitleScale = "InfoBoxTitleScale";

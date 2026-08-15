@@ -45,4 +45,7 @@ UISettings::SetDefaults() noexcept
   pages.SetDefaults();
   dialog.SetDefaults();
   sound.SetDefaults();
+
+  /* default map refresh rate: 10 Hz */
+  map_refresh_hz = 10;
 }

@@ -81,6 +81,9 @@ struct UISettings {
   DialogSettings dialog;
   SoundSettings sound;
 
+  /** Map refresh rate (Hz) chosen by user: 1, 5 or 10. Default 10. */
+  unsigned map_refresh_hz;
+
   void SetDefaults() noexcept;
 
   constexpr unsigned GetPercentScale() const noexcept {

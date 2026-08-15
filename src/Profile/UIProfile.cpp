@@ -108,6 +108,9 @@ Profile::Load(const ProfileMap &map, UISettings &settings)
 
   map.Get(ProfileKeys::MenuTimeout, settings.menu_timeout);
 
+  /* map refresh rate (Hz) */
+  map.Get(ProfileKeys::MapRefreshHz, settings.map_refresh_hz);
+
   map.Get(ProfileKeys::UIScale, settings.scale);
   if (settings.scale < 50 || settings.scale > 200)
     settings.scale = 100;

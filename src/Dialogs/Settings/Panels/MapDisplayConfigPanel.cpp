@@ -6,6 +6,7 @@
 #include "Form/DataField/Enum.hpp"
 #include "Form/DataField/Listener.hpp"
 #include "Interface.hpp"
+#include "MainWindow.hpp"
 #include "Language/Language.hpp"
 #include "Widget/RowFormWidget.hpp"
 #include "UIGlobals.hpp"
@@ -18,6 +19,7 @@ enum ControlIndex {
   GliderScreenPosition,
   MaxAutoZoomDistance,
   PAGES_DISTINCT_ZOOM,
+  MAP_REFRESH_RATE,
 };
 
 static constexpr StaticEnumChoice orientation_list[] = {
@@ -58,6 +60,13 @@ public:
 private:
   /* methods from DataFieldListener */
   void OnModified(DataField &df) noexcept override;
+
+  static constexpr StaticEnumChoice map_refresh_list[] = {
+    { 1u, N_("1 Hz"), N_("Refresh map at 1 Hz (low CPU)") },
+    { 5u, N_("5 Hz"), N_("Refresh map at 5 Hz") },
+    { 10u, N_("10 Hz"), N_("Refresh map at 10 Hz (default)") },
+    nullptr
+  };
 };
 
 void
@@ -88,6 +97,7 @@ MapDisplayConfigPanel::Prepare(ContainerWindow &parent,
 
   const MapSettings &settings_map = CommonInterface::GetMapSettings();
   const PageSettings &page_settings = CommonInterface::GetUISettings().pages;
+  const unsigned map_refresh_hz = CommonInterface::GetUISettings().map_refresh_hz;
 
   AddEnum(_("Cruise orientation"),
           _("Determines how the screen is rotated with the glider"),
@@ -124,6 +134,13 @@ MapDisplayConfigPanel::Prepare(ContainerWindow &parent,
            UnitGroup::DISTANCE, settings_map.max_auto_zoom_distance);
   SetExpertRow(MaxAutoZoomDistance);
 
+  AddEnum(_("Map refresh rate"),
+          _("How often the map screen is refreshed. Higher rates increase CPU usage."),
+          map_refresh_list,
+          map_refresh_hz,
+          this);
+  SetExpertRow(MAP_REFRESH_RATE);
+ 
   AddBoolean(_("Distinct page zoom"),
              _("Maintain one map zoom level on each page."),
              page_settings.distinct_zoom);
@@ -139,6 +156,7 @@ MapDisplayConfigPanel::Save(bool &_changed) noexcept
 
   MapSettings &settings_map = CommonInterface::SetMapSettings();
   PageSettings &page_settings = CommonInterface::SetUISettings().pages;
+  UISettings &ui_settings = CommonInterface::SetUISettings();
 
   changed |= SaveValueEnum(OrientationCruise, ProfileKeys::OrientationCruise,
                            settings_map.cruise_orientation);
@@ -160,8 +178,16 @@ MapDisplayConfigPanel::Save(bool &_changed) noexcept
                        ProfileKeys::MaxAutoZoomDistance,
                        settings_map.max_auto_zoom_distance);
 
+  /* Map refresh rate: store and apply */
+  changed |= SaveValueInteger(MAP_REFRESH_RATE, ProfileKeys::MapRefreshHz, ui_settings.map_refresh_hz);
+  if (changed) {
+   /* Apply immediately */
+   if (CommonInterface::main_window)
+     CommonInterface::main_window->SetMapRefreshHz(ui_settings.map_refresh_hz);
+  }
+
   changed |= SaveValue(PAGES_DISTINCT_ZOOM, ProfileKeys::PagesDistinctZoom,
-                       page_settings.distinct_zoom);
+                      page_settings.distinct_zoom);
 
   _changed |= changed;
 

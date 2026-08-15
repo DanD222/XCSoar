@@ -100,6 +100,9 @@ class MainWindow : public UI::SingleWindow {
 public:
   PopupMessage *popup = nullptr;
 
+  /* Adjust map refresh rate (Hz) at runtime */
+  void SetMapRefreshHz(unsigned hz) noexcept;
+
 private:
   std::unique_ptr<StorageEventListener> storage_event_adapter_;
 
@@ -133,6 +136,10 @@ private:
   UI::Notify page_actions_update_notify{[this]{ OnPageActionsUpdateNotify(); }};
 
   UI::PeriodicTimer timer{[this]{ RunTimer(); }};
+
+  /* Map refresh timer — adjustable frequency (Hz). Default 10 Hz. */
+  UI::PeriodicTimer map_refresh_timer{[this]{ OnMapRefreshTimer(); }};
+  unsigned map_refresh_hz = 10; /* Hz */
 
   BatteryTimer battery_timer;
 
@@ -512,6 +519,9 @@ private:
   void OnRestorePageNotify() noexcept;
   void OnRefreshInfoBoxesNotify() noexcept;
   void OnPageActionsUpdateNotify() noexcept;
+
+  /* Map refresh timer handler: triggered at map_refresh_hz */
+  void OnMapRefreshTimer() noexcept;
 
   void OnTerrainLoaded() noexcept;
 

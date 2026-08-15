@@ -911,6 +911,10 @@ MainWindow::FinishStartup() noexcept
 {
   timer.Schedule(std::chrono::milliseconds(500)); // 2 times per second
 
+  /* start map refresh timer at configured rate (default 10 Hz) */
+  if (map_refresh_hz > 0)
+    map_refresh_timer.Schedule(std::chrono::milliseconds(1000 / map_refresh_hz));
+
   ResumeThreads();
 }
 
@@ -918,6 +922,7 @@ void
 MainWindow::BeginShutdown() noexcept
 {
   timer.Cancel();
+  map_refresh_timer.Cancel();
 
   refresh_info_boxes_pending = false;
   page_actions_update_pending = false;
@@ -1029,6 +1034,15 @@ MainWindow::OnResize(PixelSize new_size) noexcept
     menu_bar->OnResize(rc);
 
   ProgressGlue::Move(rc);
+}
+
+void MainWindow::SetMapRefreshHz(unsigned hz) noexcept
+{
+  map_refresh_hz = hz;
+  if (map_refresh_hz > 0)
+    map_refresh_timer.Schedule(std::chrono::milliseconds(1000 / map_refresh_hz));
+  else
+    map_refresh_timer.Cancel();
 }
 
 void
@@ -1224,6 +1238,16 @@ void
 MainWindow::OnCalculatedNotify() noexcept
 {
   UIReceiveCalculatedData();
+}
+
+void
+MainWindow::OnMapRefreshTimer() noexcept
+{
+  /* Only refresh when the map is active and no modal dialog is shown */
+  if (GlueMapWindow *m = GetMapIfActive()) {
+    if (!HasDialog())
+      m->InjectRedraw();
+  }
 }
 
 void
